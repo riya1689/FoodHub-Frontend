@@ -91,6 +91,36 @@ export default function Home() {
           </div>
         </div>
       </section>
+      {/* CATEGORIES section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-end mb-8">
+            <div>
+               <h2 className="text-3xl font-bold text-gray-900">Explore Categories</h2>
+               <p className="mt-1 text-gray-600">Find exactly what you are craving</p>
+            </div>
+            <Link href="/meals" className="text-orange-600 font-semibold hover:text-orange-700 flex items-center">
+              View All <ArrowRight className="w-4 h-4 ml-1" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {['Burger', 'Pizza', 'Asian', 'Dessert'].map((category) => (
+              <Link href={`/meals?category=${category}`} key={category} className="group block overflow-hidden rounded-xl bg-white shadow-sm hover:shadow-md transition">
+                 <div className="h-32 bg-gray-200 flex items-center justify-center text-4xl group-hover:scale-105 transition duration-500">
+                    {category === 'Burger' && '🍔'}
+                    {category === 'Pizza' && '🍕'}
+                    {category === 'Asian' && '🍜'}
+                    {category === 'Dessert' && '🍰'}
+                 </div>
+                 <div className="p-4 text-center">
+                    <h3 className="font-bold text-gray-800">{category}</h3>
+                 </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
