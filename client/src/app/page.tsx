@@ -121,6 +121,29 @@ export default function Home() {
           </div>
         </div>
       </section>
+      {/* 4. BECOME A PROVIDER Section  */}
+      <section className="py-20 bg-gray-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between">
+          <div className="md:w-1/2 mb-8 md:mb-0">
+            <h2 className="text-3xl lg:text-4xl font-bold mb-4">Are you a Restaurant Owner?</h2>
+            <p className="text-gray-400 text-lg mb-6">
+              Join FoodHub today and reach more customers. Manage your menu and orders easily with our dedicated provider dashboard.
+            </p>
+            <Link 
+              href="/register?role=provider" 
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-gray-900 bg-orange-500 hover:bg-orange-400 transition"
+            >
+              <ChefHat className="w-5 h-5 mr-2" />
+              Join as Partner
+            </Link>
+          </div>
+          <div className="md:w-1/3 flex justify-center">
+             <div className="w-64 h-64 bg-gray-800 rounded-full flex items-center justify-center border-4 border-orange-500/20">
+                <ChefHat className="w-32 h-32 text-orange-500" />
+             </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
