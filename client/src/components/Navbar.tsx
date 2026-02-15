@@ -1,13 +1,40 @@
 "use client";
 
 import Link from "next/link";
-import { ShoppingCart, User, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { ShoppingCart, Menu, X, LogOut } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const isLoggedIn = false; 
-  const cartItemCount = 2;
+  const [user, setUser] = useState<any>(null);
+
+  // Check login status 
+  useEffect(() => {
+    const checkUser = () => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      } else {
+        setUser(null);
+      }
+    };
+
+    checkUser();
+    
+    // Listen for storage events
+    window.addEventListener("storage", checkUser);
+    return () => window.removeEventListener("storage", checkUser);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+    window.dispatchEvent(new Event("storage")); 
+    router.push("/");
+  };
 
   return (
     <nav className="bg-white shadow-md fixed w-full z-50 top-0 left-0 border-b border-gray-100">
@@ -21,38 +48,34 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Navigation */}
+          {/* Desktop Nav */}
           <div className="hidden md:flex space-x-8">
-            <Link href="/" className="text-gray-600 hover:text-orange-600 px-3 py-2 font-medium transition">
-              Home
-            </Link>
-            <Link href="/meals" className="text-gray-600 hover:text-orange-600 px-3 py-2 font-medium transition">
-              Menu
-            </Link>
-            <Link href="/providers" className="text-gray-600 hover:text-orange-600 px-3 py-2 font-medium transition">
-              Restaurants
-            </Link>
+            <Link href="/" className="text-gray-600 hover:text-orange-600 px-3 py-2 font-medium transition">Home</Link>
+            <Link href="/meals" className="text-gray-600 hover:text-orange-600 px-3 py-2 font-medium transition">Menu</Link>
+            <Link href="/providers" className="text-gray-600 hover:text-orange-600 px-3 py-2 font-medium transition">Restaurants</Link>
           </div>
 
-          {/* Cart, Auth*/}
+          {/* Desktop Right Side (Cart & Auth) */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* Cart Icon*/}
             <Link href="/cart" className="relative group p-2 text-gray-600 hover:text-orange-600 transition">
               <ShoppingCart className="w-6 h-6" />
-              {cartItemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-orange-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-                  {cartItemCount}
-                </span>
-              )}
             </Link>
 
-            {isLoggedIn ? (
-              // If Logged In: Show Profile Icon
-              <Link href="/profile" className="p-2 text-gray-600 hover:text-orange-600 transition">
-                <User className="w-6 h-6" />
-              </Link>
+            {user ? (
+              // Logged In View
+              <div className="flex items-center gap-4">
+                <span className="text-sm font-semibold text-gray-700">Hi, {user.name}</span>
+                {user.role === 'PROVIDER' && (
+                  <Link href="/provider/dashboard" className="text-sm bg-orange-100 text-orange-600 px-3 py-1 rounded-full font-medium">
+                    Dashboard
+                  </Link>
+                )}
+                <button onClick={handleLogout} className="p-2 text-gray-500 hover:text-red-600 transition" title="Logout">
+                  <LogOut className="w-5 h-5" />
+                </button>
+              </div>
             ) : (
-              // If Logged Out: Show Login/Register
+              // Guest View
               <div className="flex items-center space-x-3">
                 <Link href="/login" className="text-gray-700 hover:text-orange-600 font-medium px-3 py-2 transition">
                   Log in
@@ -89,13 +112,35 @@ export default function Navbar() {
             <Link href="/providers" className="block text-gray-700 hover:bg-orange-50 hover:text-orange-600 px-3 py-2 rounded-md font-medium">
               Restaurants
             </Link>
+            
             <div className="border-t border-gray-100 my-2 pt-2">
-              <Link href="/login" className="block text-gray-700 hover:bg-orange-50 hover:text-orange-600 px-3 py-2 rounded-md font-medium">
-                Log in
-              </Link>
-              <Link href="/register" className="block text-orange-600 font-bold px-3 py-2 rounded-md">
-                Sign up
-              </Link>
+              {user ? (
+                <>
+                  <div className="px-3 py-2 text-sm font-semibold text-gray-500">
+                    Signed in as {user.name}
+                  </div>
+                  {user.role === 'PROVIDER' && (
+                    <Link href="/provider/dashboard" className="block text-gray-700 hover:bg-orange-50 hover:text-orange-600 px-3 py-2 rounded-md font-medium">
+                      Dashboard
+                    </Link>
+                  )}
+                  <button 
+                    onClick={handleLogout}
+                    className="w-full text-left block text-red-600 hover:bg-red-50 px-3 py-2 rounded-md font-medium"
+                  >
+                    Log Out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" className="block text-gray-700 hover:bg-orange-50 hover:text-orange-600 px-3 py-2 rounded-md font-medium">
+                    Log in
+                  </Link>
+                  <Link href="/register" className="block text-orange-600 font-bold px-3 py-2 rounded-md">
+                    Sign up
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -103,3 +148,4 @@ export default function Navbar() {
     </nav>
   );
 }
+
