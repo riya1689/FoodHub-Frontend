@@ -55,7 +55,42 @@ export default function Home() {
           </div>
         </div>
       </section>
+      {/* HOW IT WORKS Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold text-gray-900">How It Works</h2>
+          <p className="mt-2 text-gray-600">Get your favorite food in 3 simple steps</p>
+          
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Browse Menu */}
+            <div className="p-6 bg-gray-50 rounded-xl hover:shadow-md transition">
+              <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Search className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">1. Browse Menu</h3>
+              <p className="text-gray-500">Explore hundreds of meals from the best local providers.</p>
+            </div>
 
+            {/*Place Order*/}
+            <div className="p-6 bg-gray-50 rounded-xl hover:shadow-md transition">
+              <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Utensils className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">2. Place Order</h3>
+              <p className="text-gray-500">Select your items and place order with Cash on Delivery.</p>
+            </div>
+
+            {/* Fast Delivery */}
+            <div className="p-6 bg-gray-50 rounded-xl hover:shadow-md transition">
+              <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Truck className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">3. Fast Delivery</h3>
+              <p className="text-gray-500">Relax while our providers prepare and deliver your food.</p>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
