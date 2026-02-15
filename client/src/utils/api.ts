@@ -22,4 +22,12 @@ export async function apiRequest(endpoint: string, method: string, body?: any, t
   }
 
   return data;
+  // Add this to the bottom of client/src/utils/api.ts
+  export async function fetchMeals() {
+  return apiRequest("/meals", "GET");
+  }
+
+  export async function fetchProviders() {
+  return apiRequest("/providers", "GET");
+  }
 }
