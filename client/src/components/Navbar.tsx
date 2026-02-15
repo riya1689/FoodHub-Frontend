@@ -1,4 +1,4 @@
-"use client"; // Required for interactivity (onClick, hooks)
+"use client";
 
 import Link from "next/link";
 import { ShoppingCart, User, Menu, X } from "lucide-react";
@@ -6,24 +6,22 @@ import { useState } from "react";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
-  // temporary state for UI testing - we will connect this to real Auth later
   const isLoggedIn = false; 
-  const cartItemCount = 2; // Example number
+  const cartItemCount = 2;
 
   return (
     <nav className="bg-white shadow-md fixed w-full z-50 top-0 left-0 border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           
-          {/* Left: Logo */}
+          {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="text-2xl font-bold text-orange-600 tracking-wide">
               FoodHub
             </Link>
           </div>
 
-          {/* Middle: Desktop Navigation */}
+          {/* Navigation */}
           <div className="hidden md:flex space-x-8">
             <Link href="/" className="text-gray-600 hover:text-orange-600 px-3 py-2 font-medium transition">
               Home
@@ -36,9 +34,9 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Right: Actions (Cart, Auth) */}
+          {/* Cart, Auth*/}
           <div className="hidden md:flex items-center space-x-4">
-            {/* Cart Icon (Always visible but usually functional for users) */}
+            {/* Cart Icon*/}
             <Link href="/cart" className="relative group p-2 text-gray-600 hover:text-orange-600 transition">
               <ShoppingCart className="w-6 h-6" />
               {cartItemCount > 0 && (

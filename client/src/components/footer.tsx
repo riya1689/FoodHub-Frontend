@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           
-          {/* Column 1: Brand */}
+          {/* Brand */}
           <div className="col-span-1 md:col-span-1">
             <h2 className="text-2xl font-bold text-orange-500 mb-4">FoodHub</h2>
             <p className="text-gray-400 text-sm">
@@ -14,7 +14,7 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Column 2: Quick Links */}
+          {/*Quick Links */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Discover</h3>
             <ul className="space-y-2 text-gray-400 text-sm">
@@ -24,7 +24,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: For Partners */}
+          {/*For Providers */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Partners</h3>
             <ul className="space-y-2 text-gray-400 text-sm">
@@ -34,7 +34,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: Contact */}
+          {/*Contact */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
             <ul className="space-y-2 text-gray-400 text-sm">
