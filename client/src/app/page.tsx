@@ -1,60 +1,96 @@
+"use client";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Search, Utensils, Truck, Star, ArrowRight, ChefHat } from "lucide-react";
+import { Search, Utensils, Truck, ArrowRight, ChefHat } from "lucide-react";
+
+// slider
+const heroImages = [
+  "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80", // Food Spread
+  "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80", // Pizza
+  "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=800&q=80", // Sandwich
+];
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       
-      {/* HERO SECTION */}
-      <section className="relative bg-orange-50 py-20 lg:py-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center">
-          
-          <div className="lg:w-1/2 text-center lg:text-left">
-            <h1 className="text-4xl lg:text-6xl font-extrabold text-gray-900 leading-tight">
-              Delicious Food, <br />
-              <span className="text-orange-600">Delivered to You.</span>
-            </h1>
-            <p className="mt-4 text-lg text-gray-600">
-              Order meals from your favorite local restaurants. Fresh, fast, and tasty.
-            </p>
-            
-            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Link 
-                href="/meals" 
-                className="flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full text-white bg-orange-600 hover:bg-orange-700 md:py-4 md:text-lg shadow-lg transition"
-              >
-                Order Now <ArrowRight className="ml-2 w-5 h-5"/>
-              </Link>
-              <Link 
-                href="/register?role=provider" 
-                className="flex items-center justify-center px-8 py-3 border border-gray-300 text-base font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50 md:py-4 md:text-lg shadow-sm transition"
-              >
-                List Your Restaurant
-              </Link>
-            </div>
-          </div>
-
-          <div className="lg:w-1/2 mt-12 lg:mt-0 flex justify-center relative">
-            <div className="w-80 h-80 bg-orange-200 rounded-full blur-3xl absolute -z-10 opacity-50"></div>
-            <div className="relative bg-white p-6 rounded-2xl shadow-xl rotate-3 hover:rotate-0 transition duration-500">
-                <img 
-                  src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80" 
-                  alt="Delicious Bowl" 
-                  className="rounded-xl w-80 h-64 object-cover"
-                />
-                <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-lg shadow-lg flex items-center gap-3">
-                  <div className="bg-green-100 p-2 rounded-full">
-                    <Truck className="w-6 h-6 text-green-600" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Delivery</p>
-                    <p className="font-bold text-gray-800">30 Mins</p>
-                  </div>
+      {/*HERO SECTION (Full Screen Slider) */}
+      <section className="relative w-full h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden">
+        
+        {/* Background Image Slider */}
+        <div className="absolute inset-0 z-0">
+          <Swiper
+            modules={[Autoplay]}
+            spaceBetween={0}
+            slidesPerView={1}
+            loop={true}
+            speed={1200} 
+            autoplay={{ delay: 4000, disableOnInteraction: false }}
+            className="w-full h-full"
+          >
+            {heroImages.map((src, index) => (
+              <SwiperSlide key={index}>
+                <div className="relative w-full h-full">
+                  <img 
+                    src={src} 
+                    alt={`Hero slide ${index + 1}`} 
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Dark Overlay so white text is readable */}
+                  <div className="absolute inset-0 bg-black/60"></div>
                 </div>
-            </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+
+        {/* Foreground Centered Text*/}
+        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto flex flex-col items-center">
+          
+          
+          <h1 className="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6 drop-shadow-lg">
+            Delicious Food, <br />
+            <span className="text-orange-500">Delivered to You.</span>
+          </h1>
+          
+          <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto drop-shadow-md">
+            Order meals from your favorite local restaurants. Fresh ingredients, lightning-fast delivery, and satisfaction guaranteed.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-5 justify-center w-full sm:w-auto">
+            <Link 
+              href="/meals" 
+              className="flex items-center justify-center px-8 py-4 bg-orange-600 text-white rounded-full font-bold text-lg shadow-lg hover:bg-orange-700 hover:scale-105 transition transform"
+            >
+              Order Now <ArrowRight className="ml-2 w-5 h-5"/>
+            </Link>
+            
+            {/* Glassmorphism button effect*/}
+            <Link 
+              href="/register?role=provider" 
+              className="flex items-center justify-center px-8 py-4 bg-white/10 backdrop-blur-md border border-white/30 text-white rounded-full font-bold text-lg shadow-sm hover:bg-white/20 transition"
+            >
+              List Your Restaurant
+            </Link>
           </div>
         </div>
+
+        {/* Floating Delivery Badge*/}
+        <div className="hidden md:flex absolute bottom-8 right-8 z-10 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-2xl items-center gap-4">
+          <div className="bg-green-100 p-3 rounded-full">
+            <Truck className="w-6 h-6 text-green-600" />
+          </div>
+          <div>
+            <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">Delivery</p>
+            <p className="font-extrabold text-gray-900 text-lg">30 Mins</p>
+          </div>
+        </div>
+
       </section>
+
       {/* HOW IT WORKS Section */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
