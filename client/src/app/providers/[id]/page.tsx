@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { fetchProviderById } from "@/utils/api";
-import { Provider, Meal } from "@/types";
-import MealCard from "@/components/MealCard";
+import { fetchProviderById } from "@/src/utils/api";
+import { Provider, Meal } from "@/src/types";
+import MealCard from "@/src/components/MealCard";
 import { Star, MapPin, Clock, Info } from "lucide-react";
 
 export default function ProviderDetailsPage() {
