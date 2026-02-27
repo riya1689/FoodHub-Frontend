@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { fetchMealById } from "@/utils/api";
-import { Meal } from "@/types";
+import { fetchMealById } from "@/src/utils/api";
+import { Meal } from "@/src/types";
 import { ArrowLeft, Minus, Plus, ShoppingBag, Star, Clock } from "lucide-react";
 import Link from "next/link";
 // import { useCartStore } from "@/store/cartStore"; // We will uncomment this in Step 3!
