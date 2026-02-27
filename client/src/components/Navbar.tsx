@@ -65,7 +65,7 @@ export default function Navbar() {
             {/* CHANGED: Moved Menu/Restaurants links here for better flow */}
             <div className="flex items-center space-x-4">
                 <Link href="/" className="text-gray-600 hover:text-orange-600 font-medium transition">Home</Link>
-               <Link href="/meals" className="text-gray-600 hover:text-orange-600 font-medium transition">Menu</Link>
+               <Link href="/meals" className="text-gray-600 hover:text-orange-600 font-medium transition">Meals</Link>
                <Link href="/providers" className="text-gray-600 hover:text-orange-600 font-medium transition">Restaurant</Link>
                <Link href="/meals" className="text-gray-600 hover:text-orange-600 font-medium transition">About Us</Link>
                <Link href="/cart" className="relative group p-2 text-gray-600 hover:text-orange-600 transition">
