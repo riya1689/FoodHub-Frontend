@@ -3,6 +3,7 @@
 import { Meal } from "@/src/types";
 import { Plus, Eye } from "lucide-react";
 import Link from "next/link";
+import { useCartStore } from "../store/cartStore";
 
 interface MealCardProps {
   meal: Meal;
@@ -11,9 +12,10 @@ interface MealCardProps {
 
 export default function MealCard({ meal, isDeal }: MealCardProps) {
   const price = typeof meal.price === 'string' ? parseFloat(meal.price) : meal.price;
-  
+  const addItem = useCartStore((state) => state.addItem);
   const addToCart = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigating to meal details when clicking add to cart
+    e.preventDefault(); 
+    addItem(meal, 1);
     alert(`Added ${meal.name} to cart!`);
   };
 

@@ -6,7 +6,7 @@ import { fetchMealById } from "@/src/utils/api";
 import { Meal } from "@/src/types";
 import { ArrowLeft, Minus, Plus, ShoppingBag, Star, Clock } from "lucide-react";
 import Link from "next/link";
-// import { useCartStore } from "@/store/cartStore"; // We will uncomment this in Step 3!
+import { useCartStore } from "@/src/store/cartStore";
 
 export default function MealDetailsPage() {
   const params = useParams();
@@ -15,7 +15,7 @@ export default function MealDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   
-  // const addItem = useCartStore(state => state.addItem); // We will uncomment this in Step 3!
+  const addItem = useCartStore(state => state.addItem);
 
   useEffect(() => {
     async function loadMeal() {
@@ -52,7 +52,7 @@ export default function MealDetailsPage() {
   const price = typeof meal.price === 'string' ? parseFloat(meal.price) : meal.price;
 
   const handleAddToCart = () => {
-    // addItem(meal, quantity); // We will uncomment this in Step 3!
+    addItem(meal, quantity);
     alert(`Added ${quantity}x ${meal.name} to cart!`);
   };
 
