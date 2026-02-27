@@ -56,3 +56,19 @@ export async function fetchOrderById(id: string | number, token: string) {
 export async function fetchProviderStats(token: string) {
   return apiRequest("/provider/stats", "GET", undefined, token);
 }
+export async function fetchProviderOrders(token: string) {
+  return apiRequest("/provider/orders", "GET", undefined, token);
+}
+
+//provider menu management
+export async function updateOrderStatus(id: number | string, status: string, token: string) {
+  return apiRequest(`/provider/orders/${id}`, "PATCH", { status }, token);
+}
+
+export async function addMeal(mealData: any, token: string) {
+  return apiRequest("/provider/meals", "POST", mealData, token);
+}
+
+export async function deleteMeal(id: number | string, token: string) {
+  return apiRequest(`/provider/meals/${id}`, "DELETE", undefined, token);
+}
