@@ -32,3 +32,8 @@ export async function apiRequest(endpoint: string, method: string, body?: any, t
   export async function fetchProviders() {
   return apiRequest("/providers", "GET");
 }
+
+//single provider
+export async function fetchProviderById(id: string | number) {
+  return apiRequest(`/providers/${id}`, "GET");
+}
