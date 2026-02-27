@@ -37,3 +37,7 @@ export async function apiRequest(endpoint: string, method: string, body?: any, t
 export async function fetchProviderById(id: string | number) {
   return apiRequest(`/providers/${id}`, "GET");
 }
+//single meal
+export async function fetchMealById(id: string | number) {
+  return apiRequest(`/meals/${id}`, "GET");
+}
