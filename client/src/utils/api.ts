@@ -45,3 +45,10 @@ export async function fetchMealById(id: string | number) {
 export async function createOrder(orderData: any, token: string) {
   return apiRequest("/orders", "POST", orderData, token);
 }
+export async function fetchMyOrders(token: string) {
+  return apiRequest("/orders", "GET", undefined, token);
+}
+
+export async function fetchOrderById(id: string | number, token: string) {
+  return apiRequest(`/orders/${id}`, "GET", undefined, token);
+}
