@@ -52,3 +52,7 @@ export async function fetchMyOrders(token: string) {
 export async function fetchOrderById(id: string | number, token: string) {
   return apiRequest(`/orders/${id}`, "GET", undefined, token);
 }
+// PROVIDER (PRIVATE) FETCHERS 
+export async function fetchProviderStats(token: string) {
+  return apiRequest("/provider/stats", "GET", undefined, token);
+}
