@@ -4,11 +4,13 @@ import Link from "next/link";
 import { ShoppingCart, Menu, X, LogOut, MapPin, Search } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useCartStore } from "../store/cartStore";
 
 export default function Navbar() {
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const totalItems = useCartStore((state) => state.getTotalItems());
 
   // Check login status 
   useEffect(() => {
@@ -70,6 +72,11 @@ export default function Navbar() {
                <Link href="/meals" className="text-gray-600 hover:text-orange-600 font-medium transition">About Us</Link>
                <Link href="/cart" className="relative group p-2 text-gray-600 hover:text-orange-600 transition">
                  <ShoppingCart className="w-6 h-6" />
+                  {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-orange-600 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full shadow-sm animate-fade-in-up">
+                  {totalItems}
+                  </span>
+                  )}
                </Link>
             </div>
 
