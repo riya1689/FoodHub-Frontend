@@ -103,3 +103,12 @@ export async function toggleUserStatus(id: number | string, isActive: boolean, t
 export async function fetchAllOrders(token: string) {
   return apiRequest("/admin/orders", "GET", undefined, token);
 }
+
+// Category management fetchers
+export async function addAdminCategory(name: string, token: string) {
+  return apiRequest("/admin/categories", "POST", { name }, token);
+}
+
+export async function deleteAdminCategory(id: number | string, token: string) {
+  return apiRequest(`/admin/categories/${id}`, "DELETE", undefined, token);
+}
