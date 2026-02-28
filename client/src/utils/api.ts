@@ -72,3 +72,11 @@ export async function addMeal(mealData: any, token: string) {
 export async function deleteMeal(id: number | string, token: string) {
   return apiRequest(`/provider/meals/${id}`, "DELETE", undefined, token);
 }
+
+export async function fetchProviderMeals(token: string) {
+  return apiRequest("/provider/meals", "GET", undefined, token);
+}
+
+export async function fetchCategories() {
+  return apiRequest("/categories", "GET");
+}
