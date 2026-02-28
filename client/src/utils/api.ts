@@ -99,3 +99,7 @@ export async function fetchAllUsers(token: string) {
 export async function toggleUserStatus(id: number | string, isActive: boolean, token: string) {
   return apiRequest(`/admin/users/${id}`, "PATCH", { isActive }, token);
 }
+//order fetcher
+export async function fetchAllOrders(token: string) {
+  return apiRequest("/admin/orders", "GET", undefined, token);
+}
