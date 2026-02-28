@@ -3,13 +3,19 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { fetchOrderById } from "@/src/utils/api";
-import { ArrowLeft, MapPin, Receipt, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, MapPin, Receipt, CheckCircle2, Star, MessageSquare } from "lucide-react";
 
 export default function OrderDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+
+  // Review State
+  const [reviewingMealId, setReviewingMealId] = useState<number | null>(null);
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState("");
+  const [reviewStatus, setReviewStatus] = useState<{ id: number, success: boolean }[]>([]);
 
   useEffect(() => {
     async function loadOrder() {
@@ -27,6 +33,23 @@ export default function OrderDetailsPage() {
     }
     loadOrder();
   }, [params.id]);
+
+  const handleReviewSubmit = async (e: React.FormEvent, mealId: number) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      await submitReview({ mealId, rating, comment }, token);
+      
+      setReviewStatus([...reviewStatus, { id: mealId, success: true }]);
+      setReviewingMealId(null);
+      setComment("");
+      setRating(5);
+    } catch (error: any) {
+      alert(error.message || "Failed to submit review.");
+    }
+  };
 
   if (loading) {
     return (
@@ -136,6 +159,65 @@ export default function OrderDetailsPage() {
              </div>
           </div>
         </div>
+
+        {/* 3. Leave a Review (ONLY VISIBLE IF DELIVERED) */}
+        {order.status === 'DELIVERED' && (
+          <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+            <h3 className="font-bold text-gray-900 mb-6 flex items-center text-xl">
+              <Star className="w-6 h-6 mr-2 text-orange-500 fill-orange-500" /> Rate Your Meals
+            </h3>
+            
+            <div className="space-y-6">
+              {order.items.map((item: any) => {
+                const isReviewed = reviewStatus.find(r => r.id === item.meal.id)?.success;
+
+                return (
+                  <div key={item.id} className="bg-gray-50 p-6 rounded-2xl border border-gray-200">
+                    <div className="flex justify-between items-center mb-4">
+                      <h4 className="font-bold text-gray-900">{item.meal.name}</h4>
+                      {isReviewed && <span className="text-xs font-bold text-green-600 bg-green-100 px-3 py-1 rounded-full flex items-center"><CheckCircle2 className="w-3 h-3 mr-1" /> Reviewed</span>}
+                    </div>
+
+                    {!isReviewed ? (
+                      reviewingMealId === item.meal.id ? (
+                        <form onSubmit={(e) => handleReviewSubmit(e, item.meal.id)} className="space-y-4 animate-fade-in-up">
+                          <div>
+                            <label className="block text-xs font-bold text-gray-500 mb-2 uppercase">Rating</label>
+                            <div className="flex gap-2">
+                              {[1, 2, 3, 4, 5].map(num => (
+                                <button type="button" key={num} onClick={() => setRating(num)} className="focus:outline-none">
+                                  <Star className={`w-8 h-8 ${rating >= num ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-gray-500 mb-2 uppercase flex items-center"><MessageSquare className="w-3 h-3 mr-1"/> Comment (Optional)</label>
+                            <textarea 
+                              rows={2} 
+                              value={comment} 
+                              onChange={(e) => setComment(e.target.value)} 
+                              className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-orange-500 resize-none text-sm" 
+                              placeholder="How was the food?"
+                            ></textarea>
+                          </div>
+                          <div className="flex gap-3">
+                            <button type="submit" className="bg-gray-900 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md hover:bg-gray-800 transition">Submit Review</button>
+                            <button type="button" onClick={() => setReviewingMealId(null)} className="bg-gray-200 text-gray-700 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-gray-300 transition">Cancel</button>
+                          </div>
+                        </form>
+                      ) : (
+                        <button onClick={() => { setReviewingMealId(item.meal.id); setRating(5); setComment(""); }} className="text-orange-600 font-bold text-sm hover:underline">
+                          Leave a review
+                        </button>
+                      )
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
       </div>
     </div>
