@@ -112,3 +112,12 @@ export async function addAdminCategory(name: string, token: string) {
 export async function deleteAdminCategory(id: number | string, token: string) {
   return apiRequest(`/admin/categories/${id}`, "DELETE", undefined, token);
 }
+
+// USER PROFILE FETCHERS
+export async function fetchMe(token: string) {
+  return apiRequest("/auth/me", "GET", undefined, token);
+}
+
+export async function updateUserProfile(profileData: any, token: string) {
+  return apiRequest("/auth/profile", "PATCH", profileData, token);
+}
