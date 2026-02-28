@@ -45,6 +45,9 @@ export default function Navbar() {
     return '/profile';
   };
 
+  // Only show public links to Customers or Guests
+  const showPublicLinks = !user || user.role === 'CUSTOMER';
+
   return (
     <nav className="bg-white shadow-md fixed w-full z-50 top-0 left-0 border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -58,29 +61,32 @@ export default function Navbar() {
           </div>
             
             {/* CENTER: Search Bar */}
-          <div className="hidden md:flex flex-1 max-w-lg mx-4 relative">
-             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-               <Search className="h-5 w-5 text-gray-400" />
-             </div>
-             <input 
-               type="text" 
-               onClick={() => router.push('/meals')} 
-               className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-full leading-5 bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:bg-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500 sm:text-sm transition duration-150 ease-in-out cursor-pointer"
-               placeholder="Search for food, coffee, etc..."
-             />
-          </div>
+          {showPublicLinks && (
+            <div className="hidden md:flex flex-1 max-w-lg mx-4 relative">
+               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                 <Search className="h-5 w-5 text-gray-400" />
+               </div>
+               <input 
+                 type="text" 
+                 onClick={() => router.push('/meals')} 
+                 className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-full leading-5 bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:bg-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500 sm:text-sm transition duration-150 ease-in-out cursor-pointer"
+                 placeholder="Search for food, coffee, etc..."
+               />
+            </div>
+          )}
 
           {/* Desktop Right Side (Location, Cart & Auth) */}
           <div className="hidden md:flex items-center space-x-6">
 
             {/* CHANGED: Moved Menu/Restaurants links here for better flow */}
-            <div className="flex items-center space-x-4">
-                <Link href="/" className="text-gray-600 hover:text-orange-600 font-medium transition">Home</Link>
-               <Link href="/meals" className="text-gray-600 hover:text-orange-600 font-medium transition">Meals</Link>
-               <Link href="/providers" className="text-gray-600 hover:text-orange-600 font-medium transition">Restaurant</Link>
-               <Link href="/meals" className="text-gray-600 hover:text-orange-600 font-medium transition">About Us</Link>
-               {/* Global Cart Icon (Only show if Customer or not logged in) */}
-               {(!user || user.role === 'CUSTOMER') && (
+            {showPublicLinks && (
+              <div className="flex items-center space-x-4">
+                 <Link href="/" className="text-gray-600 hover:text-orange-600 font-medium transition">Home</Link>
+                 <Link href="/meals" className="text-gray-600 hover:text-orange-600 font-medium transition">Meals</Link>
+                 <Link href="/providers" className="text-gray-600 hover:text-orange-600 font-medium transition">Restaurant</Link>
+                 <Link href="/meals" className="text-gray-600 hover:text-orange-600 font-medium transition">About Us</Link>
+                 
+                 {/* Global Cart Icon (Only show if Customer or not logged in) */}
                  <Link href="/cart" className="relative group p-2 text-gray-600 hover:text-orange-600 transition">
                    <ShoppingCart className="w-6 h-6" />
                    {totalItems > 0 && (
@@ -89,8 +95,8 @@ export default function Navbar() {
                      </span>
                    )}
                  </Link>
-               )}
-            </div>
+              </div>
+            )}
 
             {user ? (
               // Logged In View
@@ -147,17 +153,23 @@ export default function Navbar() {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg">
           <div className="px-4 pt-2 pb-4 space-y-1 flex flex-col">
-            <Link href="/" className="block text-gray-700 hover:bg-orange-50 hover:text-orange-600 px-3 py-2 rounded-md font-medium">
-              Home
-            </Link>
-            <Link href="/meals" className="block text-gray-700 hover:bg-orange-50 hover:text-orange-600 px-3 py-2 rounded-md font-medium">
-              Menu
-            </Link>
-            <Link href="/providers" className="block text-gray-700 hover:bg-orange-50 hover:text-orange-600 px-3 py-2 rounded-md font-medium">
-              Restaurants
-            </Link>
             
-            <div className="border-t border-gray-100 my-2 pt-2">
+            {/* HIDDEN FOR ADMIN/PROVIDER ON MOBILE */}
+            {showPublicLinks && (
+              <>
+                <Link href="/" className="block text-gray-700 hover:bg-orange-50 hover:text-orange-600 px-3 py-2 rounded-md font-medium">
+                  Home
+                </Link>
+                <Link href="/meals" className="block text-gray-700 hover:bg-orange-50 hover:text-orange-600 px-3 py-2 rounded-md font-medium">
+                  Menu
+                </Link>
+                <Link href="/providers" className="block text-gray-700 hover:bg-orange-50 hover:text-orange-600 px-3 py-2 rounded-md font-medium">
+                  Restaurants
+                </Link>
+              </>
+            )}
+            
+            <div className={`border-gray-100 my-2 pt-2 ${showPublicLinks ? 'border-t' : ''}`}>
               {user ? (
                 <>
                   <Link href={getProfileLink()} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2 block text-gray-700 hover:bg-orange-50 hover:text-orange-600 px-3 py-2 rounded-md font-medium">

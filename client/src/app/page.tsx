@@ -1,26 +1,74 @@
 "use client";
+
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { Search, Utensils, Truck, ArrowRight, ChefHat } from "lucide-react";
+import { fetchMeals, fetchProviders, fetchCategories } from "@/src/utils/api";
+import MealCard from "@/src/components/MealCard";
+import { ArrowRight, Utensils, MapPin, Truck, Star, Clock, ChefHat } from "lucide-react";
 
-// slider
-const heroImages = [
-  "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80", // Food Spread
-  "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80", // Pizza
-  "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=800&q=80", // Sandwich
+const heroSlides = [
+  {
+    image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1920&q=80",
+    title: "Delicious Food,",
+    highlight: "Delivered to You.",
+    subtitle: "Explore top-rated restaurants near you and satisfy your cravings.",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=1920&q=80",
+    title: "Craving Something",
+    highlight: "Spicy & Hot?",
+    subtitle: "Check out our daily deals on local favorites and save big.",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=1920&q=80",
+    title: "Healthy & Fresh",
+    highlight: "Dietary Options.",
+    subtitle: "Discover fresh, organic, and dietary-friendly meals crafted by experts.",
+  }
 ];
 
-export default function Home() {
+export default function HomePage() {
+  const [meals, setMeals] = useState<any[]>([]);
+  const [providers, setProviders] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [mealsData, providersData, categoriesData] = await Promise.all([
+          fetchMeals(),
+          fetchProviders(),
+          fetchCategories().catch(() => []) 
+        ]);
+        setMeals(mealsData);
+        setProviders(providersData);
+        setCategories(categoriesData);
+      } catch (error) {
+        console.error("Failed to load homepage data", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-600"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="bg-white min-h-screen pb-0">
       
-      {/*HERO SECTION (Full Screen Slider) */}
-      <section className="relative w-full h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden">
-        
-        {/* Background Image Slider */}
+      {/* 1. HERO SECTION (Using Your Swiper) */}
+      <section className="relative w-full h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden mt-20 md:mt-0">
         <div className="absolute inset-0 z-0">
           <Swiper
             modules={[Autoplay]}
@@ -28,57 +76,40 @@ export default function Home() {
             slidesPerView={1}
             loop={true}
             speed={1200} 
-            autoplay={{ delay: 4000, disableOnInteraction: false }}
+            autoplay={{ delay: 5000, disableOnInteraction: false }}
             className="w-full h-full"
           >
-            {heroImages.map((src, index) => (
+            {heroSlides.map((slide, index) => (
               <SwiperSlide key={index}>
                 <div className="relative w-full h-full">
-                  <img 
-                    src={src} 
-                    alt={`Hero slide ${index + 1}`} 
-                    className="w-full h-full object-cover"
-                  />
-                  {/* Dark Overlay so white text is readable */}
+                  <img src={slide.image} alt={`Hero slide ${index + 1}`} className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-black/60"></div>
+                  
+                  {/* Slide Content */}
+                  <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-4 max-w-4xl mx-auto">
+                    <h1 className="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6 drop-shadow-lg">
+                      {slide.title} <br />
+                      <span className="text-orange-500">{slide.highlight}</span>
+                    </h1>
+                    <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto drop-shadow-md">
+                      {slide.subtitle}
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-5 justify-center w-full sm:w-auto">
+                      <Link href="/meals" className="flex items-center justify-center px-8 py-4 bg-orange-600 text-white rounded-full font-bold text-lg shadow-lg hover:bg-orange-700 hover:scale-105 transition transform">
+                        Order Now <ArrowRight className="ml-2 w-5 h-5"/>
+                      </Link>
+                      <Link href="/providers" className="flex items-center justify-center px-8 py-4 bg-white/10 backdrop-blur-md border border-white/30 text-white rounded-full font-bold text-lg shadow-sm hover:bg-white/20 transition">
+                        View Restaurants
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </SwiperSlide>
             ))}
           </Swiper>
         </div>
 
-        {/* Foreground Centered Text*/}
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto flex flex-col items-center">
-          
-          
-          <h1 className="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6 drop-shadow-lg">
-            Delicious Food, <br />
-            <span className="text-orange-500">Delivered to You.</span>
-          </h1>
-          
-          <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto drop-shadow-md">
-            Order meals from your favorite local restaurants. Fresh ingredients, lightning-fast delivery, and satisfaction guaranteed.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-5 justify-center w-full sm:w-auto">
-            <Link 
-              href="/meals" 
-              className="flex items-center justify-center px-8 py-4 bg-orange-600 text-white rounded-full font-bold text-lg shadow-lg hover:bg-orange-700 hover:scale-105 transition transform"
-            >
-              Order Now <ArrowRight className="ml-2 w-5 h-5"/>
-            </Link>
-            
-            {/* Glassmorphism button effect*/}
-            <Link 
-              href="/register?role=provider" 
-              className="flex items-center justify-center px-8 py-4 bg-white/10 backdrop-blur-md border border-white/30 text-white rounded-full font-bold text-lg shadow-sm hover:bg-white/20 transition"
-            >
-              List Your Restaurant
-            </Link>
-          </div>
-        </div>
-
-        {/* Floating Delivery Badge*/}
+        {/* Floating Delivery Badge */}
         <div className="hidden md:flex absolute bottom-8 right-8 z-10 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-2xl items-center gap-4">
           <div className="bg-green-100 p-3 rounded-full">
             <Truck className="w-6 h-6 text-green-600" />
@@ -88,76 +119,173 @@ export default function Home() {
             <p className="font-extrabold text-gray-900 text-lg">30 Mins</p>
           </div>
         </div>
-
       </section>
 
-      {/* HOW IT WORKS Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900">How It Works</h2>
-          <p className="mt-2 text-gray-600">Get your favorite food in 3 simple steps</p>
-          
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Browse Menu */}
-            <div className="p-6 bg-gray-50 rounded-xl hover:shadow-md transition">
-              <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Search className="w-8 h-8" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* 2. HOW IT WORKS */}
+        <div className="py-20 border-b border-gray-100">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-extrabold text-gray-900 mb-4">How It Works</h2>
+            <p className="text-gray-500 max-w-2xl mx-auto">Get your favorite food delivered to your door in three simple steps.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div className="flex flex-col items-center text-center p-6 group">
+              <div className="w-20 h-20 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner group-hover:scale-110 transition duration-300">
+                <MapPin className="w-10 h-10" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">1. Browse Menu</h3>
-              <p className="text-gray-500">Explore hundreds of meals from the best local providers.</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">1. Choose Location</h3>
+              <p className="text-gray-500">Find the best restaurants and providers delivering to your specific area.</p>
             </div>
-
-            {/*Place Order*/}
-            <div className="p-6 bg-gray-50 rounded-xl hover:shadow-md transition">
-              <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Utensils className="w-8 h-8" />
+            <div className="flex flex-col items-center text-center p-6 group">
+              <div className="w-20 h-20 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner group-hover:scale-110 transition duration-300">
+                <Utensils className="w-10 h-10" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">2. Place Order</h3>
-              <p className="text-gray-500">Select your items and place order with Cash on Delivery.</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">2. Pick a Meal</h3>
+              <p className="text-gray-500">Browse hundreds of menus and select your favorite freshly prepared meals.</p>
             </div>
-
-            {/* Fast Delivery */}
-            <div className="p-6 bg-gray-50 rounded-xl hover:shadow-md transition">
-              <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Truck className="w-8 h-8" />
+            <div className="flex flex-col items-center text-center p-6 group">
+              <div className="w-20 h-20 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner group-hover:scale-110 transition duration-300">
+                <Truck className="w-10 h-10" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">3. Fast Delivery</h3>
-              <p className="text-gray-500">Relax while our providers prepare and deliver your food.</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">3. Fast Delivery</h3>
+              <p className="text-gray-500">Track your order in real-time and enjoy food delivered hot to your door.</p>
             </div>
           </div>
         </div>
-      </section>
-      {/* CATEGORIES section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-end mb-8">
-            <div>
-               <h2 className="text-3xl font-bold text-gray-900">Explore Categories</h2>
-               <p className="mt-1 text-gray-600">Find exactly what you are craving</p>
+
+        {/* 3 & 4. PROMOTIONAL BANNERS */}
+        <div className="py-16 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Link href="/meals" className="relative h-64 rounded-3xl overflow-hidden group shadow-md block">
+            <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=2070" alt="Daily Deals" className="w-full h-full object-cover group-hover:scale-105 transition duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 to-transparent flex flex-col justify-center p-8 md:p-10">
+              <span className="bg-orange-600 text-white text-[10px] uppercase font-bold px-3 py-1 rounded-full w-max mb-3 tracking-wider">
+                Daily Deals
+              </span>
+              <h3 className="text-3xl md:text-4xl font-extrabold text-white mb-2">Buy 1 Get 1 Free</h3>
+              <p className="text-gray-300 mb-6 font-medium">On selected pizzas & burgers today.</p>
+              <div className="flex items-center text-orange-400 font-bold group-hover:text-white transition">
+                Order Now <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-2 transition" />
+              </div>
             </div>
-            <Link href="/meals" className="text-orange-600 font-semibold hover:text-orange-700 flex items-center">
-              View All <ArrowRight className="w-4 h-4 ml-1" />
+          </Link>
+          
+          <Link href="/meals" className="relative h-64 rounded-3xl overflow-hidden group shadow-md block">
+            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=2080" alt="Flat Discount" className="w-full h-full object-cover group-hover:scale-105 transition duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-r from-emerald-900/90 to-transparent flex flex-col justify-center p-8 md:p-10">
+              <span className="bg-emerald-500 text-white text-[10px] uppercase font-bold px-3 py-1 rounded-full w-max mb-3 tracking-wider">
+                Flat Discount
+              </span>
+              <h3 className="text-3xl md:text-4xl font-extrabold text-white mb-2">20% Off Everything</h3>
+              <p className="text-gray-300 mb-6 font-medium">Use code <span className="text-emerald-400 font-bold border border-emerald-400/50 px-2 rounded">FOODHUB20</span> at checkout.</p>
+              <div className="flex items-center text-emerald-400 font-bold group-hover:text-white transition">
+                Order Now <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-2 transition" />
+              </div>
+            </div>
+          </Link>
+        </div>
+
+        {/* 5. EXPLORE CATEGORIES (Dynamic) */}
+        {categories && categories.length > 0 && (
+          <div className="pb-16 pt-8">
+            <h2 className="text-2xl font-extrabold text-gray-900 mb-6">Explore Categories</h2>
+            <div className="flex overflow-x-auto gap-4 pb-4 hide-scrollbar">
+              {categories.map((category: any) => (
+                <Link 
+                  key={category.id} 
+                  href={`/meals?category=${category.name}`} 
+                  className="shrink-0 bg-gray-50 border border-gray-100 px-6 py-4 rounded-full font-bold text-gray-700 hover:bg-orange-600 hover:text-white hover:border-orange-600 transition shadow-sm hover:shadow-md flex items-center"
+                >
+                  <span className="mr-2 text-xl">
+                    {category.name.toLowerCase() === 'burger' ? '🍔' : 
+                     category.name.toLowerCase() === 'pizza' ? '🍕' : 
+                     category.name.toLowerCase() === 'asian' ? '🍜' : 
+                     category.name.toLowerCase() === 'dessert' ? '🍰' : '🍽️'}
+                  </span> 
+                  {category.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 6. RECOMMENDED FOR YOU */}
+        <div className="py-8">
+          <div className="flex justify-between items-end mb-8 border-b border-gray-100 pb-4">
+            <div>
+              <h2 className="text-3xl font-extrabold text-gray-900 mb-2">Recommended For You</h2>
+              <p className="text-gray-500">Based on top ratings and local popularity.</p>
+            </div>
+            <Link href="/meals" className="hidden sm:flex items-center text-orange-600 font-bold hover:text-orange-700 transition group">
+              View All <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition" />
             </Link>
           </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {meals.slice(0, 8).map(meal => (
+               <MealCard key={meal.id} meal={meal} />
+            ))}
+          </div>
+          
+          <Link href="/meals" className="sm:hidden mt-8 w-full bg-gray-100 text-gray-900 py-3 rounded-xl font-bold flex justify-center items-center hover:bg-gray-200 transition">
+            View All Meals
+          </Link>
+        </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {['Burger', 'Pizza', 'Asian', 'Dessert'].map((category) => (
-              <Link href={`/meals?category=${category}`} key={category} className="group block overflow-hidden rounded-xl bg-white shadow-sm hover:shadow-md transition">
-                 <div className="h-32 bg-gray-200 flex items-center justify-center text-4xl group-hover:scale-105 transition duration-500">
-                    {category === 'Burger' && '🍔'}
-                    {category === 'Pizza' && '🍕'}
-                    {category === 'Asian' && '🍜'}
-                    {category === 'Dessert' && '🍰'}
-                 </div>
-                 <div className="p-4 text-center">
-                    <h3 className="font-bold text-gray-800">{category}</h3>
-                 </div>
+        {/* 7. TOP PROVIDERS */}
+        <div className="py-20">
+          <div className="flex justify-between items-end mb-8">
+            <div>
+              <h2 className="text-3xl font-extrabold text-gray-900 mb-2">Top Restaurants</h2>
+              <p className="text-gray-500">Discover the best food makers in your area.</p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {providers.slice(0, 3).map((provider: any) => (
+              <Link 
+                key={provider.id} 
+                href={`/providers/${provider.id}`}
+                className="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-shadow duration-300 group"
+              >
+                <div className="relative h-48 w-full overflow-hidden bg-gray-100">
+                  <img 
+                    src={provider.imageUrl || "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1920"} 
+                    alt={provider.restaurantName || provider.user?.name} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                  />
+                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold flex items-center shadow-sm">
+                    <Star className="w-3.5 h-3.5 mr-1 text-yellow-400 fill-yellow-400" /> {provider.rating || 4.5}
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-orange-600 transition">
+                    {provider.restaurantName || provider.user?.name}
+                  </h3>
+                  <div className="flex flex-col gap-2 mt-3">
+                    <div className="flex items-center text-sm text-gray-500 font-medium">
+                      <MapPin className="w-4 h-4 mr-2 text-gray-400 shrink-0" />
+                      <span className="truncate">{provider.address}</span>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-500 font-medium">
+                      <Clock className="w-4 h-4 mr-2 text-gray-400 shrink-0" />
+                      Delivery: 30-45 min
+                    </div>
+                  </div>
+                </div>
               </Link>
             ))}
           </div>
+          
+          <div className="mt-10 text-center">
+             <Link href="/providers" className="inline-flex items-center text-gray-600 font-bold hover:text-orange-600 transition group border border-gray-200 hover:border-orange-200 bg-white px-8 py-4 rounded-full shadow-sm">
+               View All Restaurants <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition" />
+             </Link>
+          </div>
         </div>
-      </section>
-      {/* 4. BECOME A PROVIDER Section  */}
+      </div>
+
+      {/* 8. BECOME A PROVIDER (Your original CTA!) */}
       <section className="py-20 bg-gray-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between">
           <div className="md:w-1/2 mb-8 md:mb-0">
@@ -180,6 +308,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
     </div>
   );
 }
+
