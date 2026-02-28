@@ -85,7 +85,17 @@ export async function fetchCategories() {
 export async function submitReview(reviewData: { mealId: number; rating: number; comment: string }, token: string) {
   return apiRequest("/reviews", "POST", reviewData, token);
 }
-// --- ADMIN FETCHERS ---
+// ADMIN FETCHERS
 export async function fetchAdminStats(token: string) {
   return apiRequest("/admin/stats", "GET", undefined, token);
+}
+
+
+//user management fetchers
+export async function fetchAllUsers(token: string) {
+  return apiRequest("/admin/users", "GET", undefined, token);
+}
+
+export async function toggleUserStatus(id: number | string, isActive: boolean, token: string) {
+  return apiRequest(`/admin/users/${id}`, "PATCH", { isActive }, token);
 }

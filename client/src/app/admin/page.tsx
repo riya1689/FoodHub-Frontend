@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fetchAdminStats } from "@/src/utils/api";
-import { DollarSign, Users, ShoppingBag, Store, ShieldAlert } from "lucide-react";
+import { DollarSign, Users, ShoppingBag, Store, ShieldAlert, ClipboardList, Tags } from "lucide-react";
 import Link from "next/link";
 
 export default function AdminDashboardPage() {
