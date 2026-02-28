@@ -146,7 +146,7 @@ export default function HomePage() {
                 Flat Discount
               </span>
               <h3 className="text-3xl md:text-4xl font-extrabold text-white mb-2">20% Off Everything</h3>
-              <p className="text-gray-300 mb-6 font-medium">Use code <span className="text-emerald-400 font-bold border border-emerald-400/50 px-2 rounded">FOODHUB20</span> at checkout.</p>
+              <p className="text-gray-300 mb-6 font-medium">Ramadan Picks. Only For Today.</p>
               <div className="flex items-center text-emerald-400 font-bold group-hover:text-white transition">
                 Order Now <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-2 transition" />
               </div>
