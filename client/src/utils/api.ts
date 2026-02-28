@@ -80,3 +80,8 @@ export async function fetchProviderMeals(token: string) {
 export async function fetchCategories() {
   return apiRequest("/categories", "GET");
 }
+
+// REVIEWS FETCHERS
+export async function submitReview(reviewData: { mealId: number; rating: number; comment: string }, token: string) {
+  return apiRequest("/reviews", "POST", reviewData, token);
+}
