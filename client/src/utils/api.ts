@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_URL || "http://localhost:5000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 export async function apiRequest(endpoint: string, method: string, body?: any, token?: string) {
   const headers: HeadersInit = {
