@@ -85,3 +85,7 @@ export async function fetchCategories() {
 export async function submitReview(reviewData: { mealId: number; rating: number; comment: string }, token: string) {
   return apiRequest("/reviews", "POST", reviewData, token);
 }
+// --- ADMIN FETCHERS ---
+export async function fetchAdminStats(token: string) {
+  return apiRequest("/admin/stats", "GET", undefined, token);
+}
