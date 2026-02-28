@@ -26,7 +26,7 @@ const heroSlides = [
     image: "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=1920&q=80",
     title: "Healthy & Fresh",
     highlight: "Dietary Options.",
-    subtitle: "Discover fresh, organic, and dietary-friendly meals crafted by experts.",
+    subtitle: "Discover fresh, organic, and dietary-friendly meals.",
   }
 ];
 
@@ -67,7 +67,7 @@ export default function HomePage() {
   return (
     <div className="bg-white min-h-screen pb-0">
       
-      {/* 1. HERO SECTION (Using Your Swiper) */}
+      {/* 1. HERO SECTION (Using Swiper) */}
       <section className="relative w-full h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden mt-20 md:mt-0">
         <div className="absolute inset-0 z-0">
           <Swiper
@@ -122,37 +122,6 @@ export default function HomePage() {
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* 2. HOW IT WORKS */}
-        <div className="py-20 border-b border-gray-100">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-gray-900 mb-4">How It Works</h2>
-            <p className="text-gray-500 max-w-2xl mx-auto">Get your favorite food delivered to your door in three simple steps.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            <div className="flex flex-col items-center text-center p-6 group">
-              <div className="w-20 h-20 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner group-hover:scale-110 transition duration-300">
-                <MapPin className="w-10 h-10" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">1. Choose Location</h3>
-              <p className="text-gray-500">Find the best restaurants and providers delivering to your specific area.</p>
-            </div>
-            <div className="flex flex-col items-center text-center p-6 group">
-              <div className="w-20 h-20 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner group-hover:scale-110 transition duration-300">
-                <Utensils className="w-10 h-10" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">2. Pick a Meal</h3>
-              <p className="text-gray-500">Browse hundreds of menus and select your favorite freshly prepared meals.</p>
-            </div>
-            <div className="flex flex-col items-center text-center p-6 group">
-              <div className="w-20 h-20 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-inner group-hover:scale-110 transition duration-300">
-                <Truck className="w-10 h-10" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">3. Fast Delivery</h3>
-              <p className="text-gray-500">Track your order in real-time and enjoy food delivered hot to your door.</p>
-            </div>
-          </div>
-        </div>
 
         {/* 3 & 4. PROMOTIONAL BANNERS */}
         <div className="py-16 grid grid-cols-1 md:grid-cols-2 gap-6">
