@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import { fetchMeals, fetchProviders, fetchCategories } from "@/src/utils/api";
 import MealCard from "@/src/components/MealCard";
-import { ArrowRight, Utensils, MapPin, Truck, Star, Clock, ChefHat } from "lucide-react";
+import { ArrowRight, Utensils, MapPin, Truck, Star, Clock, ChefHat, ChevronLeft, ChevronRight } from "lucide-react";
 
 const heroSlides = [
   {
@@ -35,7 +35,16 @@ export default function HomePage() {
   const [providers, setProviders] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const categoryScrollRef = useRef<HTMLDivElement>(null);
+  const scrollCategories = (direction: 'left' | 'right') => {
+    if (categoryScrollRef.current) {
+      const scrollAmount = 300; // Adjust this number to scroll more or less
+      categoryScrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth' // This creates the smooth sliding animation
+      });
+    }
+  };
   useEffect(() => {
     async function loadData() {
       try {
@@ -67,7 +76,7 @@ export default function HomePage() {
   return (
     <div className="bg-white min-h-screen pb-0">
       
-      {/* 1. HERO SECTION (Using Swiper) */}
+      {/* HERO SECTION (Using Swiper) */}
       <section className="relative w-full h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden mt-20 md:mt-0">
         <div className="absolute inset-0 z-0">
           <Swiper
@@ -123,7 +132,7 @@ export default function HomePage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* 3 & 4. PROMOTIONAL BANNERS */}
+        {/* PROMOTIONAL BANNERS */}
         <div className="py-16 grid grid-cols-1 md:grid-cols-2 gap-6">
           <Link href="/meals" className="relative h-64 rounded-3xl overflow-hidden group shadow-md block">
             <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=2070" alt="Daily Deals" className="w-full h-full object-cover group-hover:scale-105 transition duration-700" />
@@ -154,11 +163,15 @@ export default function HomePage() {
           </Link>
         </div>
 
-        {/* 5. EXPLORE CATEGORIES (Dynamic) */}
+        {/* EXPLORE CATEGORIES (Dynamic) */}
         {categories && categories.length > 0 && (
           <div className="pb-16 pt-8">
             <h2 className="text-2xl font-extrabold text-gray-900 mb-6">Explore Categories</h2>
-            <div className="flex overflow-x-auto gap-4 pb-4 hide-scrollbar">
+              
+              <div 
+              ref={categoryScrollRef} 
+              className="flex overflow-x-auto gap-4 pb-4 hide-scrollbar scroll-smooth"
+              >
               {categories.map((category: any) => (
                 <Link 
                   key={category.id} 
@@ -177,7 +190,6 @@ export default function HomePage() {
             </div>
           </div>
         )}
-
         {/* 6. RECOMMENDED FOR YOU */}
         <div className="py-8">
           <div className="flex justify-between items-end mb-8 border-b border-gray-100 pb-4">
@@ -254,7 +266,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* 8. BECOME A PROVIDER (Your original CTA!) */}
+      {/* BECOME A PROVIDER (Your original CTA!) */}
       <section className="py-20 bg-gray-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between">
           <div className="md:w-1/2 mb-8 md:mb-0">
