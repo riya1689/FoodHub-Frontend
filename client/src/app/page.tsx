@@ -38,13 +38,26 @@ export default function HomePage() {
   const categoryScrollRef = useRef<HTMLDivElement>(null);
   const scrollCategories = (direction: 'left' | 'right') => {
     if (categoryScrollRef.current) {
-      const scrollAmount = 300; // Adjust this number to scroll more or less
+      const scrollAmount = 300; 
       categoryScrollRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth' // This creates the smooth sliding animation
+        behavior: 'smooth' 
       });
     }
   };
+  
+  const getCategoryImage = (name: string) => {
+    const lowerName = name.toLowerCase();
+    if (lowerName.includes('burger')) return 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=150&q=80';
+    if (lowerName.includes('pizza')) return 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=150&q=80';
+    if (lowerName.includes('asian')) return 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=150&q=80';
+    if (lowerName.includes('dessert')) return 'https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=150&q=80';
+    
+    // Default fallback image for any other category
+    return 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=150&q=80'; 
+  };
+
+
   useEffect(() => {
     async function loadData() {
       try {
@@ -163,27 +176,54 @@ export default function HomePage() {
           </Link>
         </div>
 
-        {/* EXPLORE CATEGORIES (Dynamic) */}
+        {/* EXPLORE CATEGORIES (Dynamic with Slider & Images) */}
         {categories && categories.length > 0 && (
           <div className="pb-16 pt-8">
-            <h2 className="text-2xl font-extrabold text-gray-900 mb-6">Explore Categories</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-extrabold text-gray-900">Explore Categories</h2>
               
-              <div 
+              <div className="hidden sm:flex gap-2">
+                <button 
+                  onClick={() => scrollCategories('left')}
+                  className="p-2 rounded-full border border-gray-200 bg-white text-gray-600 hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200 transition shadow-sm"
+                  aria-label="Scroll left"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button 
+                  onClick={() => scrollCategories('right')}
+                  className="p-2 rounded-full border border-gray-200 bg-white text-gray-600 hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200 transition shadow-sm"
+                  aria-label="Scroll right"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+              
+            {/* --- NEW: Embedded CSS to forcefully hide the gray scrollbar --- */}
+            <style>{`
+              .hide-scrollbar::-webkit-scrollbar {
+                display: none;
+              }
+            `}</style>
+
+            <div 
               ref={categoryScrollRef} 
+              // Added style properties to hide scrollbar in Firefox/Edge as well
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               className="flex overflow-x-auto gap-4 pb-4 hide-scrollbar scroll-smooth"
-              >
+            >
               {categories.map((category: any) => (
                 <Link 
                   key={category.id} 
                   href={`/meals?category=${category.name}`} 
-                  className="shrink-0 bg-gray-50 border border-gray-100 px-6 py-4 rounded-full font-bold text-gray-700 hover:bg-orange-600 hover:text-white hover:border-orange-600 transition shadow-sm hover:shadow-md flex items-center"
+                  className="shrink-0 bg-gray-50 border border-gray-100 pl-2 pr-6 py-2 rounded-full font-bold text-gray-700 hover:bg-orange-600 hover:text-white hover:border-orange-600 transition shadow-sm hover:shadow-md flex items-center gap-3 group"
                 >
-                  <span className="mr-2 text-xl">
-                    {category.name.toLowerCase() === 'burger' ? '🍔' : 
-                     category.name.toLowerCase() === 'pizza' ? '🍕' : 
-                     category.name.toLowerCase() === 'asian' ? '🍜' : 
-                     category.name.toLowerCase() === 'dessert' ? '🍰' : '🍽️'}
-                  </span> 
+                  <img 
+                    src={getCategoryImage(category.name)} 
+                    alt={category.name} 
+                    className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm group-hover:border-orange-200 transition"
+                  />
                   {category.name}
                 </Link>
               ))}
