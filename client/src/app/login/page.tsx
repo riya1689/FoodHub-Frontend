@@ -5,12 +5,40 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { apiRequest } from "@/src/utils/api";
 import { Lock, Mail, Loader2, ArrowRight } from "lucide-react";
-
+import { GoogleLogin } from '@react-oauth/google';
 export default function LoginPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  //  Google Auth Handler ---
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    setError("");
+    setIsLoading(true);
+    try {
+      // Send the Google token to our backend
+      const data = await apiRequest("/auth/google", "POST", { 
+        token: credentialResponse.credential 
+      });
+      
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      window.dispatchEvent(new Event("storage"));
+
+      if (data.user.role === "PROVIDER") {
+        router.push("/provider/dashboard");
+      } else if (data.user.role === "ADMIN") {
+        router.push("/admin");
+      } else {
+        router.push("/meals"); 
+      }
+    } catch (err: any) {
+      setError(err.message || "Google authentication failed");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -116,14 +144,17 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Social Login Placeholders (Visual Only) */}
-        <div className="grid grid-cols-2 gap-3">
-          <button className="flex items-center justify-center py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm font-medium text-gray-700">
-            Google
-          </button>
-          <button className="flex items-center justify-center py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm font-medium text-gray-700">
-            Facebook
-          </button>
+        {/* Official Google Button --- */}
+        <div className="flex justify-center w-full">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => setError("Google login failed. Please try again.")}
+            useOneTap
+            shape="rectangular"
+            theme="outline"
+            size="large"
+            width="100%"
+          />
         </div>
 
         {/* Footer */}

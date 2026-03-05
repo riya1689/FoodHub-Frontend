@@ -4,6 +4,7 @@ import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { apiRequest } from "@/src/utils/api";
+import { GoogleLogin } from '@react-oauth/google';
 import { User, Lock, Mail, Loader2, Briefcase, Check, X } from "lucide-react";
 
 function RegisterContent() {
@@ -32,6 +33,33 @@ function RegisterContent() {
 
   // The password is only valid if ALL criteria are true
   const isPasswordValid = Object.values(criteria).every(Boolean);
+
+  // Google Auth Handler
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    setError("");
+    setIsLoading(true);
+    try {
+      // Send the token AND the chosen role so the backend knows what type of user to create
+      const data = await apiRequest("/auth/google", "POST", { 
+        token: credentialResponse.credential,
+        role: formData.role
+      });
+      
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      window.dispatchEvent(new Event("storage"));
+
+      if (data.user.role === "PROVIDER") {
+        router.push("/provider/dashboard");
+      } else {
+        router.push("/meals"); 
+      }
+    } catch (err: any) {
+      setError(err.message || "Google authentication failed");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,6 +121,26 @@ function RegisterContent() {
           </button>
         </div>
 
+        {/* Google Login */}
+        <div className="flex justify-center w-full">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => setError("Google login failed. Please try again.")}
+            text="signup_with"
+            shape="rectangular"
+            theme="outline"
+            size="large"
+            width="100%"
+          />
+        </div>
+           <div className="relative my-4">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-200"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white text-gray-500">Or sign up with email</span>
+          </div>
+        </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           
           {/* Name */}
