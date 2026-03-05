@@ -4,7 +4,7 @@ import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { apiRequest } from "@/src/utils/api";
-import { User, Lock, Mail, Loader2, Briefcase } from "lucide-react";
+import { User, Lock, Mail, Loader2, Briefcase, Check, X } from "lucide-react";
 
 function RegisterContent() {
   const router = useRouter();
@@ -20,8 +20,28 @@ function RegisterContent() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  // DYNAMIC PASSWORD TRACKING LOGIC
+  const password = formData.password;
+  
+  const criteria = {
+    length: password.length >= 8 && password.length <= 12,
+    number: /\d/.test(password),
+    specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+    uppercase: /[A-Z]/.test(password),
+  };
+
+  // The password is only valid if ALL criteria are true
+  const isPasswordValid = Object.values(criteria).every(Boolean);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+  // Prevent submission if password is weak
+    if (!isPasswordValid) {
+      setError("Please ensure your password meets all the security requirements.");
+      return;
+    }
+
     setError("");
     setIsLoading(true);
 
@@ -122,11 +142,41 @@ function RegisterContent() {
               />
             </div>
           </div>
+        
+        {/* RED/GREEN VALIDATION UI */}
+            {password.length > 0 && (
+              <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200 space-y-1.5">
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Password Requirements:</p>
+                
+                <div className={`flex items-center text-xs font-medium transition-colors ${criteria.length ? 'text-green-600' : 'text-red-500'}`}>
+                  {criteria.length ? <Check className="w-3.5 h-3.5 mr-2 shrink-0" /> : <X className="w-3.5 h-3.5 mr-2 shrink-0" />}
+                  8 to 12 characters
+                </div>
+                <div className={`flex items-center text-xs font-medium transition-colors ${criteria.uppercase ? 'text-green-600' : 'text-red-500'}`}>
+                  {criteria.uppercase ? <Check className="w-3.5 h-3.5 mr-2 shrink-0" /> : <X className="w-3.5 h-3.5 mr-2 shrink-0" />}
+                  At least one uppercase letter
+                </div>
+                <div className={`flex items-center text-xs font-medium transition-colors ${criteria.number ? 'text-green-600' : 'text-red-500'}`}>
+                  {criteria.number ? <Check className="w-3.5 h-3.5 mr-2 shrink-0" /> : <X className="w-3.5 h-3.5 mr-2 shrink-0" />}
+                  At least one number
+                </div>
+                <div className={`flex items-center text-xs font-medium transition-colors ${criteria.specialChar ? 'text-green-600' : 'text-red-500'}`}>
+                  {criteria.specialChar ? <Check className="w-3.5 h-3.5 mr-2 shrink-0" /> : <X className="w-3.5 h-3.5 mr-2 shrink-0" />}
+                  At least one special character (!@#$%^&*)
+                </div>
+              </div>
+            )}
 
           <button
             type="submit"
-            disabled={isLoading}
-            className="w-full bg-orange-600 text-white py-2.5 rounded-lg font-semibold hover:bg-orange-700 transition flex items-center justify-center shadow-md"
+            // Disable button if password is not valid
+            disabled={isLoading || (password.length > 0 && !isPasswordValid)}
+            // Change button colors based on validity 
+            className={`w-full py-2.5 rounded-lg font-semibold transition flex items-center justify-center shadow-md ${
+              (password.length > 0 && !isPasswordValid)
+                ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                : 'bg-orange-600 text-white hover:bg-orange-700'
+            }`}
           >
             {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : `Sign up as ${formData.role === 'CUSTOMER' ? 'Customer' : 'Provider'}`}
           </button>
