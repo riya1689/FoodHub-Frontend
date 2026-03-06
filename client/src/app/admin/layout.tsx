@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { LayoutDashboard, Users, ClipboardList, LogOut, ShieldCheck, Tags } from "lucide-react";
+import ProtectedRoute from "@/src/components/ProtectedRoute";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -23,6 +24,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   return (
+
+    <ProtectedRoute allowedRoles={["ADMIN"]}>
     <div className="flex h-screen bg-gray-50 pt-20"> 
       
       {/* Sidebar */}
@@ -66,5 +69,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </main>
 
     </div>
+    </ProtectedRoute>
   );
 }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { LayoutDashboard, UtensilsCrossed, ClipboardList, LogOut, Store } from "lucide-react";
+import ProtectedRoute from "@/src/components/ProtectedRoute";
 
 export default function ProviderLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -22,7 +23,8 @@ export default function ProviderLayout({ children }: { children: React.ReactNode
   ];
 
   return (
-    <div className="flex h-screen bg-gray-50 pt-20"> {/* pt-20 clears the main public navbar */}
+    <ProtectedRoute allowedRoles={["PROVIDER"]}>
+    <div className="flex h-screen bg-gray-50 pt-20">
       
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-gray-100 flex flex-col hidden md:flex h-full fixed">
@@ -65,5 +67,6 @@ export default function ProviderLayout({ children }: { children: React.ReactNode
       </main>
 
     </div>
+    </ProtectedRoute>
   );
 }
