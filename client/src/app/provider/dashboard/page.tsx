@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fetchProviderStats } from "@/src/utils/api";
-import { DollarSign, ShoppingBag, UtensilsCrossed, TrendingUp } from "lucide-react";
+import { Banknote, ShoppingBag, UtensilsCrossed, TrendingUp } from "lucide-react";
 
 export default function ProviderDashboardPage() {
   const [stats, setStats] = useState({ totalOrders: 0, activeMeals: 0, revenue: 0 });
@@ -33,7 +33,7 @@ export default function ProviderDashboardPage() {
   }
 
   const statCards = [
-    { title: "Total Revenue", value: `৳ ${stats.revenue.toFixed(0)}`, icon: <DollarSign className="w-6 h-6 text-green-600" />, bg: "bg-green-50" },
+    { title: "Total Revenue", value: `৳ ${stats.revenue.toFixed(0)}`, icon: <Banknote className="w-6 h-6 text-green-600" />, bg: "bg-green-50" },
     { title: "Total Orders", value: stats.totalOrders, icon: <ShoppingBag className="w-6 h-6 text-blue-600" />, bg: "bg-blue-50" },
     { title: "Active Meals", value: stats.activeMeals, icon: <UtensilsCrossed className="w-6 h-6 text-orange-600" />, bg: "bg-orange-50" },
   ];
@@ -73,7 +73,7 @@ export default function ProviderDashboardPage() {
             Keep your menu updated with fresh images and clear descriptions to attract more customers. Monitor your incoming orders to maintain a high rating!
           </p>
         </div>
-        <div className="relative z-10 text-9xl">👨‍🍳</div>
+        <div className="relative z-10 text-9xl"></div>
         <div className="absolute top-0 right-1/4 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl"></div>
       </div>
     </div>

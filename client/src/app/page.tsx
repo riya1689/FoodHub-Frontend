@@ -200,7 +200,7 @@ export default function HomePage() {
               </div>
             </div>
               
-            {/* --- NEW: Embedded CSS to forcefully hide the gray scrollbar --- */}
+            {/* forcefully hide the gray scrollbar */}
             <style>{`
               .hide-scrollbar::-webkit-scrollbar {
                 display: none;
@@ -209,7 +209,7 @@ export default function HomePage() {
 
             <div 
               ref={categoryScrollRef} 
-              // Added style properties to hide scrollbar in Firefox/Edge as well
+              // hide scrollbar
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               className="flex overflow-x-auto gap-4 pb-4 hide-scrollbar scroll-smooth"
             >
@@ -230,7 +230,7 @@ export default function HomePage() {
             </div>
           </div>
         )}
-        {/* 6. RECOMMENDED FOR YOU */}
+        {/* arrow*/}
         <div className="py-8">
           <div className="flex justify-between items-end mb-8 border-b border-gray-100 pb-4">
             <div>
@@ -253,7 +253,7 @@ export default function HomePage() {
           </Link>
         </div>
 
-        {/* 7. TOP PROVIDERS */}
+        {/* TOP PROVIDERS */}
         <div className="py-20">
           <div className="flex justify-between items-end mb-8">
             <div>
@@ -306,7 +306,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* BECOME A PROVIDER (Your original CTA!) */}
+      {/* BECOME A PROVIDER */}
       <section className="py-20 bg-gray-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between">
           <div className="md:w-1/2 mb-8 md:mb-0">
