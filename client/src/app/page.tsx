@@ -146,7 +146,10 @@ export default function HomePage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* PROMOTIONAL BANNERS */}
+      <div className="pb-16 pt-20">
+        <h2 className="text-2xl font-extrabold text-gray-900">Daily Deals & Flat Discounts</h2>
         <div className="py-16 grid grid-cols-1 md:grid-cols-2 gap-6">
+          
           <Link href="/meals" className="relative h-64 rounded-3xl overflow-hidden group shadow-md block">
             <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=2070" alt="Daily Deals" className="w-full h-full object-cover group-hover:scale-105 transition duration-700" />
             <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 to-transparent flex flex-col justify-center p-8 md:p-10">
@@ -304,6 +307,7 @@ export default function HomePage() {
              </Link>
           </div>
         </div>
+      </div>
       </div>
 
       {/* BECOME A PROVIDER */}
