@@ -4,13 +4,16 @@ import { useState, useEffect } from "react";
 import { fetchMeals } from "@/src/utils/api";
 import { Meal } from "@/src/types";
 import MealCard from "@/src/components/MealCard";
-import { Search, MapPin, SlidersHorizontal } from "lucide-react";
+import { Search, MapPin, SlidersHorizontal, ChevronDown } from "lucide-react";
 
 export default function MealsCatalogPage() {
   const [meals, setMeals] = useState<Meal[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCuisine, setSelectedCuisine] = useState("All");
+  const [selectedDiet, setSelectedDiet] = useState("All");
+  const [priceRange, setPriceRange] = useState("All");
 
   useEffect(() => {
     async function loadData() {
@@ -26,11 +29,29 @@ export default function MealsCatalogPage() {
     loadData();
   }, []);
 
+  const uniqueDiets = ["All", ...Array.from(new Set(meals.map(m => m.dietaryPref).filter(Boolean)))];
+  const uniqueCuisines = ["All", ...Array.from(new Set(meals.flatMap(m => m.provider?.cuisines || []).filter(Boolean)))];
+
   const filteredMeals = meals.filter(meal => {
-    const matchesSearch = meal.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    
+  const matchesSearch = meal.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           (meal.provider?.restaurantName?.toLowerCase().includes(searchQuery.toLowerCase()));
-    const matchesCategory = selectedCategory === "All" || meal.category?.name === selectedCategory;
-    return matchesSearch && matchesCategory;
+    
+    
+  const matchesCategory = selectedCategory === "All" || meal.category?.name === selectedCategory;
+    
+  const matchesDiet = selectedDiet === "All" || meal.dietaryPref === selectedDiet;
+    
+  const matchesCuisine = selectedCuisine === "All" || meal.provider?.cuisines?.includes(selectedCuisine);
+
+    //Price filtering Logic
+    let matchesPrice = true;
+    const price = typeof meal.price === 'string' ? parseFloat(meal.price) : meal.price;
+    if (priceRange === "Under ৳300") matchesPrice = price < 300;
+    else if (priceRange === "৳300 - ৳600") matchesPrice = price >= 300 && price <= 600;
+    else if (priceRange === "Over ৳600") matchesPrice = price > 600;
+
+    return matchesSearch && matchesCategory && matchesDiet && matchesCuisine && matchesPrice;
   });
 
   return (
@@ -55,13 +76,70 @@ export default function MealsCatalogPage() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 p-3 rounded-xl transition flex items-center justify-center">
+              <button 
+                className="bg-orange-600 hover:bg-orange-700 text-white shadow-md p-3 rounded-xl transition flex items-center justify-center"
+              >
                 <SlidersHorizontal className="w-5 h-5" />
               </button>
             </div>
         </div>
+      
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in-up">
+            
+            {/* Filter: Cuisine */}
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">Cuisine</label>
+              <div className="relative">
+                <select 
+                  value={selectedCuisine} 
+                  onChange={(e) => setSelectedCuisine(e.target.value)}
+                  className="w-full appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded-xl outline-none focus:ring-2 focus:ring-orange-500 font-medium cursor-pointer"
+                >
+                  {uniqueCuisines.map((cuisine: any) => (
+                    <option key={cuisine} value={cuisine}>{cuisine}</option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-3 top-3.5 h-5 w-5 text-gray-400 pointer-events-none" />
+              </div>
+            </div>
 
-        {/* Categories Rail */}
+            {/* Filter: Dietary Preference */}
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">Dietary Preference</label>
+              <div className="relative">
+                <select 
+                  value={selectedDiet} 
+                  onChange={(e) => setSelectedDiet(e.target.value)}
+                  className="w-full appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded-xl outline-none focus:ring-2 focus:ring-orange-500 font-medium cursor-pointer"
+                >
+                  {uniqueDiets.map((diet: any) => (
+                    <option key={diet} value={diet}>{diet}</option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-3 top-3.5 h-5 w-5 text-gray-400 pointer-events-none" />
+              </div>
+            </div>
+
+            {/* Filter by Price Range */}
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">Price Range</label>
+              <div className="relative">
+                <select 
+                  value={priceRange} 
+                  onChange={(e) => setPriceRange(e.target.value)}
+                  className="w-full appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded-xl outline-none focus:ring-2 focus:ring-orange-500 font-medium cursor-pointer"
+                >
+                  {["All", "Under ৳300", "৳300 - ৳600", "Over ৳600"].map((price) => (
+                    <option key={price} value={price}>{price}</option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-3 top-3.5 h-5 w-5 text-gray-400 pointer-events-none" />
+              </div>
+            </div>
+
+          </div>
+
+        {/* Categories*/}
         <div>
           <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide">
             {['All', 'Burger', 'Pizza', 'Asian', 'Healthy', 'Dessert', 'Snack', 'Biriyani'].map((cat) => (
@@ -99,6 +177,18 @@ export default function MealsCatalogPage() {
               <div className="text-center py-20 text-gray-500">
                 <div className="text-6xl mb-4">🍽️</div>
                 <p className="text-xl font-medium">No meals found for this criteria.</p>
+                <button 
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSelectedCategory("All");
+                    setSelectedCuisine("All");
+                    setSelectedDiet("All");
+                    setPriceRange("All");
+                  }}
+                  className="mt-4 text-orange-600 font-bold hover:underline"
+                >
+                  Clear all filters
+                </button>
               </div>
             )}
           </div>
