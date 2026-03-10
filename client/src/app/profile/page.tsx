@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { fetchMe, updateUserProfile } from "@/src/utils/api";
-import { User, Mail, Lock, Shield, Calendar, Edit3, CheckCircle } from "lucide-react";
-
+import { User, Mail, Lock, Shield, Calendar, Edit3, CheckCircle, Package } from "lucide-react";
+import Link from "next/link";
 export default function ProfilePage() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -95,10 +95,18 @@ export default function ProfilePage() {
                   <span className="text-sm font-bold text-gray-500 flex items-center"><Shield className="w-4 h-4 mr-2" /> Role</span>
                   <span className="text-sm font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-lg">{user.role}</span>
                 </div>
+
                 <div className="flex items-center justify-between bg-gray-50 p-3 rounded-xl border border-gray-100">
                   <span className="text-sm font-bold text-gray-500 flex items-center"><Calendar className="w-4 h-4 mr-2" /> Joined</span>
                   <span className="text-sm font-bold text-gray-700">{new Date(user.createdAt).toLocaleDateString()}</span>
                 </div>
+                {/* My Orders Navigation */}
+                <Link href="/orders" className="flex items-center justify-between bg-orange-600 text-white p-3 rounded-xl hover:bg-orange-700 transition w-full shadow-sm mt-4 group">
+                  <span className="text-sm font-bold flex items-center">
+                    <Package className="w-4 h-4 mr-2" /> My Orders
+                  </span>
+                  <span className="text-sm font-bold group-hover:translate-x-1 transition-transform">View &rarr;</span>
+                </Link>
               </div>
             </div>
           </div>
@@ -168,3 +176,5 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+

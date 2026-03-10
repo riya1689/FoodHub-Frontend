@@ -76,7 +76,7 @@ export default function OrderDetailsPage() {
 
         <h1 className="text-3xl font-extrabold text-gray-900 mb-8">Order #{order.id}</h1>
 
-        {/* 1. Status Progress Tracker */}
+        {/* Status Progress Tracker */}
         {order.status !== 'CANCELLED' ? (
           <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 mb-6">
             <div className="relative flex justify-between items-center mb-2">
@@ -114,7 +114,7 @@ export default function OrderDetailsPage() {
           </div>
         )}
 
-        {/* 2. Order Details Grid */}
+        {/* Order Details Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {/* Delivery Info */}
@@ -160,7 +160,7 @@ export default function OrderDetailsPage() {
           </div>
         </div>
 
-        {/* 3. Leave a Review (ONLY VISIBLE IF DELIVERED) */}
+        {/* Leave a Review (ONLY VISIBLE IF DELIVERED) */}
         {order.status === 'DELIVERED' && (
           <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
             <h3 className="font-bold text-gray-900 mb-6 flex items-center text-xl">
